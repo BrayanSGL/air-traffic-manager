@@ -1,4 +1,4 @@
-FROM node:20-alpine as build
+FROM node:20 as build
 WORKDIR /app
 
 COPY package*.json ./
@@ -15,7 +15,7 @@ RUN npm run build
 #correr la aplicación
 FROM nginx:stable-alpine
 
-COPY --from=build /app/air-traffic-manager/dist /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
