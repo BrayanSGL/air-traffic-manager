@@ -1,6 +1,7 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"; // Importar Popup
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useState, useEffect } from "react";
 
 // Crear un nuevo icono para el marcador
 const airplaneIcon = L.icon({
@@ -72,6 +73,43 @@ const airports = [
 
 const Map = () => {
   const center = [4.711, -74.0721]; // Latitud y longitud de Bogotá
+  const [currentPosition, setCurrentPosition] = useState(center);
+  const [currentAirportIndex, setCurrentAirportIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentAirportIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % airports.length;
+        const start = airports[prevIndex].coordinates;
+        const end = airports[nextIndex].coordinates;
+        animateMarker(start, end);
+        return nextIndex;
+      });
+    }, 3000); // Cambia la posición cada 3 segundos
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const animateMarker = (start, end) => {
+    const duration = 3000; // Duración de la animación en milisegundos
+    const frameRate = 60; // Cuadros por segundo
+    const totalFrames = (duration / 1000) * frameRate;
+    let frame = 0;
+
+    const animate = () => {
+      frame++;
+      const progress = frame / totalFrames;
+      const lat = start[0] + (end[0] - start[0]) * progress;
+      const lng = start[1] + (end[1] - start[1]) * progress;
+      setCurrentPosition([lat, lng]);
+
+      if (frame < totalFrames) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    animate();
+  };
 
   return (
     <div>
@@ -84,14 +122,11 @@ const Map = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        <Marker position={center} icon={airplaneIcon}></Marker>
+        <Marker position={currentPosition} icon={airplaneIcon}></Marker>
 
         {airports.map((airport) => (
-          <Marker
-            key={airport.code}
-            position={airport.coordinates}
-          >
-            <Popup>{airport.name}</Popup>{" "}
+          <Marker key={airport.code} position={airport.coordinates}>
+            <Popup>{airport.name}</Popup>
           </Marker>
         ))}
       </MapContainer>
