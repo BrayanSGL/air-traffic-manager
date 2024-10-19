@@ -4,28 +4,17 @@ export const LoginScreen = () => {
       <h1>Iniciar sesión</h1>
       <form>
         <div>
-          <label htmlFor="name">Nombre</label>
-          <input type="text" id="name" />
-        </div>
-
-        <div>
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" />
+          <input type="email" id="email" required />
         </div>
 
         <div>
           <label htmlFor="password">Contraseña</label>
-          <input type="password" id="password" />
+          <input type="password" id="password" required />
         </div>
 
-        <div>
-          <label htmlFor="confirmPassword">Confirmar contraseña</label>
-          <input type="password" id="confirmPassword" />
-        </div>
-
-        <button type="submit">Registrarse</button>
+        <button type="submit">Iniciar sesión</button>
       </form>
     </div>
   );
 };
-
