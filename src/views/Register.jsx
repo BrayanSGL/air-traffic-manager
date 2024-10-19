@@ -15,7 +15,7 @@ export const RegisterScreen = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const name = event.target.name.value;
+    const username = event.target.name.value;
     const email = event.target.email.value;
     const password = event.target.password.value;
     const confirmPassword = event.target.confirmPassword.value;
@@ -25,7 +25,7 @@ export const RegisterScreen = () => {
       return;
     }
 
-    const user = { name, email, password };
+    const user = { username, email, password };
     registerUser(user);
   };
 
