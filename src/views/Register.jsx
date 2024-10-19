@@ -6,7 +6,7 @@ export const RegisterScreen = () => {
 
   const registerUser = async (user) => {
     try {
-      await axios.post("https://localhost:5000/add_user", user);
+      await axios.post("http://localhost:5000/add_user", user);
       navigate("/login");
     } catch (error) {
       console.error(error);

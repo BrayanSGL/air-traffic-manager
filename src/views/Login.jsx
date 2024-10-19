@@ -1,4 +1,18 @@
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 export const LoginScreen = () => {
+  const navigate = useNavigate();
+  
+  const loginUser = async (user) => {
+    try {
+      await axios.post("http://localhost:5000/login", user);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   return (
     <div>
       <h1>Iniciar sesión</h1>
