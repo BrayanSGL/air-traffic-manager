@@ -1,9 +1,14 @@
 import { Router } from "./router";
+import { AuthProvider } from "./contexts/authContext";
 // import viteLogo from '/vite.svg'
 import "./App.css";
 
 function App() {
-  return <Router />;
+  return (
+    <AuthProvider>
+      <Router />
+    </AuthProvider>
+  );
   // return (
   //   <>
   //     <h1>Gestor de tráfico aereo</h1>
