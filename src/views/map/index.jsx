@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState, useEffect } from "react";
@@ -139,7 +139,6 @@ const Map = () => {
             <tr>
               <th>Parada</th>
               <th>Hora de Salida</th>
-              <th>Tiempo de Viaje</th>
               <th>Tiempo de Espera</th>
               <th>Hora de Llegada</th>
             </tr>
@@ -150,14 +149,9 @@ const Map = () => {
                 <td>{airport.name}</td>
                 <td>{airport.departure}</td>
                 <td>
-                  {Math.floor(airport.flightTime / 60)}h {airport.flightTime % 60}m
-                </td>
-                <td>
                   {Math.floor(airport.waitTime / 60)}h {airport.waitTime % 60}m
                 </td>
-                <td>
-                  {airports[(index + 1) % airports.length].departure}
-                </td>
+                <td>{airports[(index + 1) % airports.length].departure}</td>
               </tr>
             ))}
           </tbody>
