@@ -53,10 +53,10 @@ const Map = () => {
 
   useEffect(() => {
     updateAirplanePosition();
-  }, [flights, currentTime]);
+  }, [flights]);
 
   const updateAirplanePosition = () => {
-    const actualFlight = getActualFlight(currentTime, flights);
+    const actualFlight = getActualFlight(flights);
     console.log("🥑 ~ updateAirplanePosition ~ actualFlight:", actualFlight);
   };
 
