@@ -1,6 +1,9 @@
 import { clock } from "./time";
 
 export const getActualFlight = (flights) => {
+  if (!flights || flights.length === 0) {
+    return null;
+  }
   // sumarle 16 dias a la fecha actual
   const t = new Date(flights[0].departure);
   const time = clock();
