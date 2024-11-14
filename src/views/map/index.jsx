@@ -52,11 +52,11 @@ const Map = () => {
   }, []);
 
   useEffect(() => {
-    updateAirplanePosition(time);
-  }, [flights]);
+    updateAirplanePosition();
+  }, [flights, currentTime]);
 
-  const updateAirplanePosition = (time) => {
-    const actualFlight = getActualFlight(time, flights);
+  const updateAirplanePosition = () => {
+    const actualFlight = getActualFlight(currentTime, flights);
     console.log("🥑 ~ updateAirplanePosition ~ actualFlight:", actualFlight);
   };
 
