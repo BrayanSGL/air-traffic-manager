@@ -78,11 +78,16 @@ const Map = () => {
   const center = [4.711, -74.0721]; // Latitud y longitud de Bogotá
   const [currentPosition, setCurrentPosition] = useState(center);
   const [currentAirportIndex, setCurrentAirportIndex] = useState(0);
-  const [currentTime, setCurrentTime] =useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     const time = clock()
     setCurrentTime(time)
+
+    const intervalTime = setInterval(() => {
+      const time = clock()
+      setCurrentTime(time)
+    }, 100);
 
     const interval = setInterval(() => {
       setCurrentAirportIndex((prevIndex) => {
@@ -94,7 +99,7 @@ const Map = () => {
       });
     }, 3000); // Cambia la posición cada 3 segundos
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval, intervalTime);
   }, []);
 
   const animateMarker = (start, end) => {
