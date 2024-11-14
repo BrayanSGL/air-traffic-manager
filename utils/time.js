@@ -1,4 +1,4 @@
-function clock() {
+export function clock() {
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const millisecondsSinceStartOfDay = now - startOfDay;

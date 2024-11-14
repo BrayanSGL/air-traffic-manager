@@ -6,10 +6,18 @@ export const LoginScreen = () => {
 
   const loginUser = async (user) => {
     try {
-      await axios.post("http://localhost:5000/login", user);
+      // Realiza la solicitud de inicio de sesión y guarda la respuesta
+      const response = await axios.post("http://localhost:5000/auth/login", user);
+
+      // Guarda el usuario y el token en el localStorage
+      const { data } = response;
+      localStorage.setItem("user", JSON.stringify(data.user));  // Guardamos el usuario
+      localStorage.setItem("token", data.token);  // Guardamos el token de autenticación
+
+      // Redirige a la página principal
       navigate("/");
     } catch (error) {
-      console.error(error);
+      console.error("Error al iniciar sesión:", error);
     }
   };
 
@@ -28,12 +36,12 @@ export const LoginScreen = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" required />
+          <input type="email" id="email" name="email" required />
         </div>
 
         <div>
           <label htmlFor="password">Contraseña</label>
-          <input type="password" id="password" required />
+          <input type="password" id="password" name="password" required />
         </div>
 
         <button type="submit">Iniciar sesión</button>

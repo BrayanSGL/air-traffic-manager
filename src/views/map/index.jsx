@@ -3,6 +3,8 @@ import styles from "./styles.module.css";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState, useEffect } from "react";
+import { clock } from "../../../utils/time";
+import axios from "axios";
 
 // Crear un nuevo icono para el marcador
 const airplaneIcon = L.icon({
@@ -76,8 +78,12 @@ const Map = () => {
   const center = [4.711, -74.0721]; // Latitud y longitud de Bogotá
   const [currentPosition, setCurrentPosition] = useState(center);
   const [currentAirportIndex, setCurrentAirportIndex] = useState(0);
+  const [currentTime, setCurrentTime] =useState(0);
 
   useEffect(() => {
+    const time = clock()
+    setCurrentTime(time)
+
     const interval = setInterval(() => {
       setCurrentAirportIndex((prevIndex) => {
         const nextIndex = (prevIndex + 1) % airports.length;
@@ -112,6 +118,21 @@ const Map = () => {
     animate();
   };
 
+  const addRoute = async (user_id, flight_id) => {
+    try {
+      await axios.post(`http://127.0.0.1:5000/flights/${flight_id}/register`, {user_id});
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  const handleRoutes = (event) => {
+    event.preventDefault();
+    console.log('shit')
+    addRoute(1,1);
+  };
+
   return (
     <div className={styles.main__container}>
       <MapContainer
@@ -133,7 +154,7 @@ const Map = () => {
       </MapContainer>
 
       <section>
-        <h3>Hora: {}</h3>
+        <h3>Hora: {currentTime}</h3>
         <table>
           <thead>
             <tr>
@@ -141,6 +162,7 @@ const Map = () => {
               <th>Hora de Salida</th>
               <th>Tiempo de Espera</th>
               <th>Hora de Llegada</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -152,6 +174,9 @@ const Map = () => {
                   {Math.floor(airport.waitTime / 60)}h {airport.waitTime % 60}m
                 </td>
                 <td>{airports[(index + 1) % airports.length].departure}</td>
+                <td>
+                    <button onClick={handleRoutes}>Viajar</button>
+                </td>
               </tr>
             ))}
           </tbody>
