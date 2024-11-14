@@ -22,7 +22,6 @@ const airports = [
     coordinates: [4.7, -74.15],
     departure: "08:00",
     flightTime: 90, // 1h 30m
-    waitTime: 30, // 30m
   },
   {
     name: "Aeropuerto Internacional Alfonso Bonilla Aragón",
@@ -30,7 +29,6 @@ const airports = [
     coordinates: [3.45, -76.53],
     departure: "10:30",
     flightTime: 75, // 1h 15m
-    waitTime: 20, // 20m
   },
   {
     name: "Aeropuerto Internacional José María Córdova",
@@ -38,7 +36,6 @@ const airports = [
     coordinates: [6.22, -75.59],
     departure: "12:25",
     flightTime: 105, // 1h 45m
-    waitTime: 25, // 25m
   },
   {
     name: "Aeropuerto Internacional Rafael Núñez",
@@ -46,7 +43,6 @@ const airports = [
     coordinates: [10.44, -75.51],
     departure: "14:00",
     flightTime: 90, // 1h 30m
-    waitTime: 15, // 15m
   },
   {
     name: "Aeropuerto Internacional Palonegro",
@@ -54,7 +50,6 @@ const airports = [
     coordinates: [7.13, -73.18],
     departure: "17:00",
     flightTime: 120, // 2h 00m
-    waitTime: 30, // 30m
   },
   {
     name: "Aeropuerto Alfredo Vásquez Cobo",
@@ -62,7 +57,6 @@ const airports = [
     coordinates: [-4.19, -69.94],
     departure: "20:00",
     flightTime: 150, // 2h 30m
-    waitTime: 15, // 15m
   },
   {
     name: "Aeropuerto Internacional El Dorado",
@@ -70,7 +64,6 @@ const airports = [
     coordinates: [4.7, -74.15],
     departure: "00:00",
     flightTime: 150, // 2h 30m
-    waitTime: 0, // Regreso a Bogotá
   },
 ];
 
@@ -81,12 +74,14 @@ const Map = () => {
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
-    const time = clock()
-    setCurrentTime(time)
+    getFlights();
+    
+    const time = clock();
+    setCurrentTime(time);
 
     const intervalTime = setInterval(() => {
-      const time = clock()
-      setCurrentTime(time)
+      const time = clock();
+      setCurrentTime(time);
     }, 100);
 
     const interval = setInterval(() => {
@@ -123,19 +118,29 @@ const Map = () => {
     animate();
   };
 
+  const getFlights = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:5000/flights`);
+    } catch (error) {
+      console.log("🥑 ~ getFlights ~ response:", response)
+      console.error(error);
+    }
+  };
+
   const addRoute = async (user_id, flight_id) => {
     try {
-      await axios.post(`http://127.0.0.1:5000/flights/${flight_id}/register`, {user_id});
+      await axios.post(`http://127.0.0.1:5000/flights/${flight_id}/register`, {
+        user_id,
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
-
   const handleRoutes = (event) => {
     event.preventDefault();
-    console.log('shit')
-    addRoute(1,1);
+    console.log("shit");
+    addRoute(1, 1);
   };
 
   return (
@@ -180,7 +185,7 @@ const Map = () => {
                 </td>
                 <td>{airports[(index + 1) % airports.length].departure}</td>
                 <td>
-                    <button onClick={handleRoutes}>Viajar</button>
+                  <button onClick={handleRoutes}>Viajar</button>
                 </td>
               </tr>
             ))}
