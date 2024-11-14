@@ -14,68 +14,16 @@ const airplaneIcon = L.icon({
   popupAnchor: [1, -34], // Punto desde el cual se abrirá el popup relativo al icono
 });
 
-// Datos de los aeropuertos
-const airports = [
-  {
-    name: "Aeropuerto Internacional El Dorado",
-    code: "BOG",
-    coordinates: [4.7, -74.15],
-    departure: "08:00",
-    flightTime: 90, // 1h 30m
-  },
-  {
-    name: "Aeropuerto Internacional Alfonso Bonilla Aragón",
-    code: "CLO",
-    coordinates: [3.45, -76.53],
-    departure: "10:30",
-    flightTime: 75, // 1h 15m
-  },
-  {
-    name: "Aeropuerto Internacional José María Córdova",
-    code: "MDE",
-    coordinates: [6.22, -75.59],
-    departure: "12:25",
-    flightTime: 105, // 1h 45m
-  },
-  {
-    name: "Aeropuerto Internacional Rafael Núñez",
-    code: "CTG",
-    coordinates: [10.44, -75.51],
-    departure: "14:00",
-    flightTime: 90, // 1h 30m
-  },
-  {
-    name: "Aeropuerto Internacional Palonegro",
-    code: "BGA",
-    coordinates: [7.13, -73.18],
-    departure: "17:00",
-    flightTime: 120, // 2h 00m
-  },
-  {
-    name: "Aeropuerto Alfredo Vásquez Cobo",
-    code: "LET",
-    coordinates: [-4.19, -69.94],
-    departure: "20:00",
-    flightTime: 150, // 2h 30m
-  },
-  {
-    name: "Aeropuerto Internacional El Dorado",
-    code: "BOG",
-    coordinates: [4.7, -74.15],
-    departure: "00:00",
-    flightTime: 150, // 2h 30m
-  },
-];
-
 const Map = () => {
   const center = [4.711, -74.0721]; // Latitud y longitud de Bogotá
   const [currentPosition, setCurrentPosition] = useState(center);
   const [currentAirportIndex, setCurrentAirportIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [flights, setFlights] = useState([]);
 
   useEffect(() => {
     getFlights();
-    
+
     const time = clock();
     setCurrentTime(time);
 
@@ -84,17 +32,17 @@ const Map = () => {
       setCurrentTime(time);
     }, 100);
 
-    const interval = setInterval(() => {
-      setCurrentAirportIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % airports.length;
-        const start = airports[prevIndex].coordinates;
-        const end = airports[nextIndex].coordinates;
-        animateMarker(start, end);
-        return nextIndex;
-      });
-    }, 3000); // Cambia la posición cada 3 segundos
+    // const interval = setInterval(() => {
+    //   setCurrentAirportIndex((prevIndex) => {
+    //     const nextIndex = (prevIndex + 1) % airports.length;
+    //     const start = airports[prevIndex].coordinates;
+    //     const end = airports[nextIndex].coordinates;
+    //     animateMarker(start, end);
+    //     return nextIndex;
+    //   });
+    // }, 3000); // Cambia la posición cada 3 segundos
 
-    return () => clearInterval(interval, intervalTime);
+    return () => clearInterval(intervalTime);
   }, []);
 
   const animateMarker = (start, end) => {
@@ -121,8 +69,9 @@ const Map = () => {
   const getFlights = async () => {
     try {
       const response = await axios.get(`http://127.0.0.1:5000/flights`);
+      console.log("🥑 ~ getFlights ~ response:", response);
+      setFlights(response.data);
     } catch (error) {
-      console.log("🥑 ~ getFlights ~ response:", response)
       console.error(error);
     }
   };
@@ -155,12 +104,12 @@ const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <Marker position={currentPosition} icon={airplaneIcon}></Marker>
-
+{/* 
         {airports.map((airport) => (
           <Marker key={airport.code} position={airport.coordinates}>
             <Popup>{airport.name}</Popup>
           </Marker>
-        ))}
+        ))} */}
       </MapContainer>
 
       <section>
@@ -168,22 +117,18 @@ const Map = () => {
         <table>
           <thead>
             <tr>
-              <th>Parada</th>
-              <th>Hora de Salida</th>
-              <th>Tiempo de Espera</th>
-              <th>Hora de Llegada</th>
-              <th></th>
+              <th>Origen</th>
+              <th>Destino</th>
+              <th>Tiempo de vuelo</th>
             </tr>
           </thead>
           <tbody>
-            {airports.map((airport, index) => (
-              <tr key={airport.code}>
-                <td>{airport.name}</td>
-                <td>{airport.departure}</td>
-                <td>
-                  {Math.floor(airport.waitTime / 60)}h {airport.waitTime % 60}m
-                </td>
-                <td>{airports[(index + 1) % airports.length].departure}</td>
+            {flights?.map((flight, index) => (
+              <tr key={flight.code}>
+                <td>{flight.origin}</td>
+                <td>{flight.destination}</td>
+                <td>{flight.duration}</td>
+
                 <td>
                   <button onClick={handleRoutes}>Viajar</button>
                 </td>
