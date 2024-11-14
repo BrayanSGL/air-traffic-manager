@@ -7,6 +7,9 @@ export const getActualFlight = (flights) => {
   const actualFlight = flights.find(
     (flight) => {
       const departure = new Date(flight.departure);
+      console.log("🥑 ~ getActualFlight ~ departure:", departure)
+      console.log("🥑 ~ getActualFlight ~ timeSimulation:", timeSimulation)
+      console.log("🥑 ~ getActualFlight ~ arrival:", arrival)
       const arrival = new Date(flight.arrival);
       return timeSimulation >= departure && timeSimulation <= arrival
     }
