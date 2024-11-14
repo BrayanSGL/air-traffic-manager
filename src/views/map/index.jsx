@@ -3,8 +3,14 @@ import styles from "./styles.module.css";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useState, useEffect } from "react";
-import { clock } from "../../../utils/time";
 import axios from "axios";
+
+// Utils
+import { getActualFlight } from "../../../utils/fligth";
+import { clock } from "../../../utils/time";
+
+// Consts
+import { airports } from "../../constants/airports";
 
 // Crear un nuevo icono para el marcador
 const airplaneIcon = L.icon({
@@ -44,6 +50,15 @@ const Map = () => {
 
     return () => clearInterval(intervalTime);
   }, []);
+
+  useEffect(() => {
+    updateAirplanePosition(time);
+  }, [flights]);
+
+  const updateAirplanePosition = (time) => {
+    const actualFlight = getActualFlight(time, flights);
+    console.log("🥑 ~ updateAirplanePosition ~ actualFlight:", actualFlight);
+  };
 
   const animateMarker = (start, end) => {
     const duration = 3000; // Duración de la animación en milisegundos
@@ -104,7 +119,7 @@ const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <Marker position={currentPosition} icon={airplaneIcon}></Marker>
-{/* 
+        {/* 
         {airports.map((airport) => (
           <Marker key={airport.code} position={airport.coordinates}>
             <Popup>{airport.name}</Popup>
