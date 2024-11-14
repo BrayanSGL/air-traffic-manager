@@ -1,15 +1,10 @@
 import { clock } from "./time";
 
 export const getActualFlight = (flights) => {
-  const time = clock();
-  // const actualFlight = flights.find(
-  //   (flight) => time >= flight.departure && time <= flight.arrival
-  // );
-  // but ignore the day and month and year of the date
+  // sumarle 16 dias a la fecha actual
+  const time = clock() + 16 * 24 * 60 * 60 * 1000;
   const actualFlight = flights.find(
-    (flight) =>
-      time.slice(11) >= flight.departure.slice(11) &&
-      time.slice(11) <= flight.arrival.slice(11)
+    (flight) => time >= flight.departure && time <= flight.arrival
   );
   return actualFlight;
 };
